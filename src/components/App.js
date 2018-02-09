@@ -28,14 +28,16 @@ class App extends React.Component {
             });
         }
 
-        // if (this.state.sightings) {
-        //     const sig = this.state.sightings;
-        //     sightings = sig.map(s => {
-        //         return <Card name={s.describtion} />;
-        //     });
-        // } else {
-        //     console.log(typeof fe('sightings'));
-        // }
+        if (this.state.sightings) {
+            const sig = this.state.sightings;
+            sightings = sig.map(s => {
+                return <Card name={s.description} />;
+            });
+        } else {
+            fe('sightings').then(result => {
+                this.setState({sightings: result});
+            });
+        }
 
         return (
             <div>
