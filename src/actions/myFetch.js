@@ -5,4 +5,5 @@ const fetchFromServer = (toFetch) => {
         })
 }
 
+
 export default fetchFromServer;

@@ -1,28 +1,47 @@
 import React from 'react';
 import Card from './Card';
+import Form from './Form';
 import fe from './../actions/myFetch.js';
+import {Grid, Row} from 'react-bootstrap';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
+
+        this.fetchSightings = this.fetchSightings.bind(this);
+
         this.state = {
             species: null,
             sightings: null
         };
     }
 
+    handleSubmit(e) {
+        e.preventDefault();
+        fetch('http://localhost:8081/sightings', {
+            headers: {
+                'content-type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify(this.state)
+        }).then(this.fetchSightings());
+    }
+
+    fetchSightings() {
+        fe('sightings').then(result => {
+            this.setState({sightings: result});
+        });
+    }
 
     render() {
-        let cards;
+        let form;
         let sightings;
 
         console.log(this.state.sightings);
         if (this.state.species) {
             const species = this.state.species;
-            cards = species.map(s => {
-                return <Card name={s.name} />;
-            });
-        } else {
+            form = <Form species={species} handleSubmit={this.handleSubmit} fetchSightings={this.fetchSightings} />;
+         } else {
             fe('species').then(result => {
                 this.setState({species: result});
             });
@@ -31,19 +50,28 @@ class App extends React.Component {
         if (this.state.sightings) {
             const sig = this.state.sightings;
             sightings = sig.map(s => {
-                return <Card name={s.description} />;
+                return(
+                    <Card 
+                        species={s.species} 
+                        description={s.description} 
+                        dateTime={s.dateTime}
+                        count={s.count}
+                    />
+                );
             });
         } else {
-            fe('sightings').then(result => {
-                this.setState({sightings: result});
-            });
+           this.fetchSightings(); 
         }
 
         return (
-            <div>
-                {cards}
-                {sightings}
-            </div>
+            <Grid>
+                <Row>
+                    {sightings}
+                </Row>
+                <Row>
+                    {form}
+                </Row>
+            </Grid>
         );
     }
 
