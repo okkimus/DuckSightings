@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormGroup, ControlLabel, FormControl, HelpBlock, Col, Button} from 'react-bootstrap';
+import {FormGroup, ControlLabel, FormControl, HelpBlock, Col, Row, Button, Image} from 'react-bootstrap';
 import moment from 'moment';
 
 var Datetime = require('react-datetime');
@@ -14,9 +14,9 @@ class Form extends React.Component {
         this.fetchSightings = this.props.fetchSightings;
 
         this.state = {
-            species: null,
+            species: 'select',
             description: '',
-            dateTime: null,
+            dateTime: moment(),
             count: 1
         };
     }
@@ -45,49 +45,54 @@ class Form extends React.Component {
         });
     }
 
-    // handleSubmit(e) {
-    //     e.preventDefault();
-    //     this.postSighting();
-    // }
-
-    // postSighting() {
-    //     fetch('http://localhost:8081/sightings', {
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         },
-    //         method: 'POST',
-    //         body: JSON.stringify(this.state)
-    //     });
-    // }
-
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <FormGroup>
-                    <ControlLabel>What duck did you see?</ControlLabel>
-                    <FormControl componentClass="select" placeholder="Select a duck" name="species" onChange={this.handleInputChange}>
-                        <option value="select">Select...</option>
-                        { this.props.species.map(s => {
-                            return(
-                                <option value={s.name}>{s.name}</option>
-                            )
-                        })}
-                    </FormControl>
-                    <ControlLabel>How many?</ControlLabel>
-                    <FormControl type="number" onChange={this.handleInputChange} name="count">
-                    </FormControl>
-                </FormGroup>
-                <FormGroup controlId="formControlsTextarea">
-                    <ControlLabel>Description</ControlLabel>
-                    <FormControl componentClass="textarea" placeholder="Describe your sighting..." name="description" onChange={this.handleInputChange}/>
-                </FormGroup>
-                <Datetime onChange={this.handleDateChange}/>
-                <FormGroup>
-                    <Col sm={10}>        
-                        <input type="submit" value="Submit" /> 
-                    </Col>
-                </FormGroup>
-            </form>
+            <Row>
+                <Col md={6}>
+                    <form onSubmit={this.handleSubmit}>
+                        <Row>
+                            <FormGroup>
+                                <Col md={9}>
+                                    <ControlLabel>What duck did you see?</ControlLabel>
+                                    <FormControl componentClass="select" placeholder="Select a duck" name="species" onChange={this.handleInputChange}>
+                                        <option value="select">Select...</option>
+                                        { this.props.species.map(s => {
+                                            return(
+                                                <option value={s.name}>{s.name}</option>
+                                            )
+                                        })}
+                                    </FormControl>
+                                </Col>
+                                <Col md={3}>
+                                    <ControlLabel>How many?</ControlLabel>
+                                    <FormControl type="number" onChange={this.handleInputChange} name="count">
+                                    </FormControl>
+                                </Col>
+                            </FormGroup>
+                        </Row>
+                        <Row>
+                            <Col md={6}>
+                                <FormGroup controlId="formControlsTextarea">
+                                    <ControlLabel>Describe your sighting...</ControlLabel>
+                                    <FormControl componentClass="textarea" name="description" onChange={this.handleInputChange}/>
+                                </FormGroup>
+                            </Col>
+                            <Col md={6}>
+                                <ControlLabel>When dis happend?</ControlLabel>
+                                <Datetime onChange={this.handleDateChange} open={true} value={this.state.dateTime} />
+                            </Col>
+                        </Row>
+                        <FormGroup>
+                            <Col sm={10}>        
+                                <input type="submit" value="Submit" /> 
+                            </Col>
+                        </FormGroup>
+                    </form>
+                </Col>
+                <Col md={6}>
+                    <Image src={"/images/" + this.state.species.replace(/ /g, "_") + ".jpg"} responsive />
+                </Col>
+            </Row>
         );
       }
 }

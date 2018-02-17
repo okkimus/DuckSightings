@@ -2,7 +2,7 @@ import React from 'react';
 import Card from './Card';
 import Form from './Form';
 import fe from './../actions/myFetch.js';
-import {Grid, Row} from 'react-bootstrap';
+import {Grid, Row, PageHeader} from 'react-bootstrap';
 
 class App extends React.Component {
     constructor(props) {
@@ -12,7 +12,8 @@ class App extends React.Component {
 
         this.state = {
             species: null,
-            sightings: null
+            sightings: null,
+            order: 'DESC'
         };
     }
 
@@ -48,7 +49,9 @@ class App extends React.Component {
         }
 
         if (this.state.sightings) {
-            const sig = this.state.sightings;
+            const sig = this.state.sightings.sort((a,b) => {
+                return b.dateTime < a.dateTime;
+            });
             sightings = sig.map(s => {
                 return(
                     <Card 
@@ -65,6 +68,9 @@ class App extends React.Component {
 
         return (
             <Grid>
+                <Row>
+                    <PageHeader>Duck Sightings <small>They're coming back!</small></PageHeader>
+                </Row>
                 <Row>
                     {sightings}
                 </Row>

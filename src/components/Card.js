@@ -4,7 +4,7 @@ import {Col} from 'react-bootstrap';
 class Card extends React.Component {
     render() {
         return (
-            <Col xs={12} md={4}>
+            <Col xs={12} sm={6} md={4} lg={3}>
                 <img src={"/images/" + this.props.species.replace(/ /g, "_") + ".jpg"} width="76" height="76" />
                 <h1>{this.props.species + this.props.count}</h1>
                 <h5>{this.props.dateTime}</h5>
