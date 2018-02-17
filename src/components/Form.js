@@ -74,12 +74,12 @@ class Form extends React.Component {
                             <Col md={6}>
                                 <FormGroup controlId="formControlsTextarea">
                                     <ControlLabel>Describe your sighting...</ControlLabel>
-                                    <FormControl componentClass="textarea" name="description" onChange={this.handleInputChange}/>
+                                    <FormControl componentClass="textarea" value={this.state.description} name="description" onChange={this.handleInputChange}/>
                                 </FormGroup>
                             </Col>
                             <Col md={6}>
                                 <ControlLabel>When dis happend?</ControlLabel>
-                                <Datetime onChange={this.handleDateChange} open={true} value={this.state.dateTime} />
+                                <Datetime onChange={this.handleDateChange} value={this.state.dateTime} />
                             </Col>
                         </Row>
                         <FormGroup>

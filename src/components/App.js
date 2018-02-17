@@ -3,6 +3,7 @@ import Card from './Card';
 import Form from './Form';
 import fe from './../actions/myFetch.js';
 import {Grid, Row, PageHeader} from 'react-bootstrap';
+import moment from 'moment';
 
 class App extends React.Component {
     constructor(props) {
@@ -25,7 +26,17 @@ class App extends React.Component {
             },
             method: 'POST',
             body: JSON.stringify(this.state)
-        }).then(this.fetchSightings());
+            })
+            .then(() => {
+                return this.fetchSightings()
+            })
+            .then(() => {
+                this.setState({
+                    description: '',
+                    dateTime: moment(),
+                    count: 1
+                })
+            });
     }
 
     fetchSightings() {
