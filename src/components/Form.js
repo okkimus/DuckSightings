@@ -65,7 +65,7 @@ class Form extends React.Component {
                                 </Col>
                                 <Col md={3}>
                                     <ControlLabel>How many?</ControlLabel>
-                                    <FormControl type="number" onChange={this.handleInputChange} name="count">
+                                    <FormControl type="number" value={this.state.count} onChange={this.handleInputChange} name="count">
                                     </FormControl>
                                 </Col>
                             </FormGroup>

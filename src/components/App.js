@@ -38,7 +38,6 @@ class App extends React.Component {
         let form;
         let sightings;
 
-        console.log(this.state.sightings);
         if (this.state.species) {
             const species = this.state.species;
             form = <Form species={species} handleSubmit={this.handleSubmit} fetchSightings={this.fetchSightings} />;
