@@ -12,14 +12,17 @@ class Form extends React.Component {
         this.handleInputChange = this.handleInputChange.bind(this);
         this.handleDateChange = this.handleDateChange.bind(this);
         this.handleSubmit = this.props.handleSubmit.bind(this);
-        this.fetchSightings = this.props.fetchSightings;
+        this.handleDismiss = this.handleDismiss.bind(this);
         this.validateState = this.props.validateState.bind(this);
+        this.fetchSightings = this.props.fetchSightings;
+        this.handleShow = this.props.handleShow;
 
         this.state = {
             species: 'select',
             description: '',
             dateTime: moment(),
-            count: 1
+            count: 1,
+            show: false
         };
     }
     
@@ -38,17 +41,16 @@ class Form extends React.Component {
             dateTime: e._d
         });
     }
-    
-    handleShow() {
-        console.log(this.state);
-        this.setState({ show: true });
-    }
 
+    handleDismiss() {
+        this.setState({ show: false });
+    }
+  
     render() {
         return (
             <div>
                 <Row>
-                    <FormAlert handleDismiss={this.handleDismiss} handleShow={this.handleShow} />
+                    <FormAlert handleDismiss={this.handleDismiss} show={this.state.show} />
                 </Row>
                 <Row>
                     <Col md={6}>

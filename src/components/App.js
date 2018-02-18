@@ -22,11 +22,16 @@ class App extends React.Component {
     handleSubmit(e) {
         e.preventDefault();
 
-        const stateValidation = this.validateState();
-
         if (!this.validateState()) {
             console.log("handle show");
             return this.handleShow();
+        }
+
+        const sighting = {
+            species: this.state.species,
+            description: this.state.description,
+            dateTime: this.state.dateTime,
+            count: this.state.count
         }
 
         fetch('http://localhost:8081/sightings', {
@@ -34,7 +39,7 @@ class App extends React.Component {
                 'content-type': 'application/json'
             },
             method: 'POST',
-            body: JSON.stringify(this.state)
+            body: JSON.stringify(sighting)
             })
             .then(() => {
                 return this.fetchSightings()
@@ -43,9 +48,14 @@ class App extends React.Component {
                 this.setState({
                     description: '',
                     dateTime: moment(),
-                    count: 1
-                })
+                    count: 1,
+                    show: false
+                });
             });
+    }
+
+    handleShow() {
+        this.setState({ show: true });
     }
 
     validateState() {
@@ -76,7 +86,12 @@ class App extends React.Component {
 
         if (this.state.species) {
             const species = this.state.species;
-            form = <Form species={species} handleSubmit={this.handleSubmit} fetchSightings={this.fetchSightings} validateState={this.validateState} />;
+            form = <Form 
+                species={species}
+                handleSubmit={this.handleSubmit}
+                fetchSightings={this.fetchSightings}
+                validateState={this.validateState}
+                handleShow={this.handleShow} />;
          } else {
             fe('species').then(result => {
                 let species = [];
