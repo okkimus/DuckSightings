@@ -19,4 +19,4 @@ class FormAlert extends React.Component {
     }
 }
 
-  export default FormAlert;
+export default FormAlert;

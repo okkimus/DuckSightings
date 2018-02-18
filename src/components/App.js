@@ -23,7 +23,6 @@ class App extends React.Component {
         e.preventDefault();
 
         if (!this.validateState()) {
-            console.log("handle show");
             return this.handleShow();
         }
 
