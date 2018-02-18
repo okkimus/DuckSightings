@@ -33,7 +33,7 @@ class App extends React.Component {
             count: this.state.count
         }
 
-        fetch('http://localhost:8081/sightings', {
+        fetch('https://duck-server.herokuapp.com/sightings', {
             headers: {
                 'content-type': 'application/json'
             },
@@ -110,7 +110,7 @@ class App extends React.Component {
                 }
 
             });
-            sightings = sig.map(s => {
+            sightings = sig.map((s, i) => {
                 return(
                     <Card 
                         species={s.species} 
@@ -128,6 +128,7 @@ class App extends React.Component {
             <Grid>
                 <Row>
                     <PageHeader>Duck Sightings <small>They're coming back!</small></PageHeader>
+                    <p>Order: </p>
                     <ToggleButtonGroup
                         type="radio"
                         value={this.state.order}
@@ -137,7 +138,7 @@ class App extends React.Component {
                         <ToggleButton value={'ASC'}>Ascending</ToggleButton>
                     </ToggleButtonGroup>
                 </Row>
-                <Row>
+                <Row className="row-override">
                     {sightings}
                 </Row>
                 <Row>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormGroup, ControlLabel, FormControl, HelpBlock, Col, Row, Button, Image} from 'react-bootstrap';
+import {FormGroup, ControlLabel, FormControl, HelpBlock, Col, Row, Button, Image, Well} from 'react-bootstrap';
 import moment from 'moment';
 import FormAlert from './FormAlert';
 
@@ -45,10 +45,15 @@ class Form extends React.Component {
     handleDismiss() {
         this.setState({ show: false });
     }
+
+    valid(current) {
+        const now = moment();
+        return current < now;
+    }
   
     render() {
         return (
-            <div>
+            <Well>
                 <Row>
                     <FormAlert handleDismiss={this.handleDismiss} show={this.state.show} />
                 </Row>
@@ -61,11 +66,13 @@ class Form extends React.Component {
                                         <ControlLabel>What duck did you see?</ControlLabel>
                                         <FormControl componentClass="select" placeholder="Select a duck" name="species" onChange={this.handleInputChange}>
                                             <option value="select">Select...</option>
-                                            { this.props.species.map(s => {
-                                                return(
-                                                    <option value={s}>{s}</option>
-                                                )
-                                            })}
+                                            {   
+                                                this.props.species.map(s => {
+                                                    return(
+                                                        <option value={s}>{s}</option>
+                                                    )
+                                                })
+                                            }
                                         </FormControl>
                                     </Col>
                                     <Col md={3}>
@@ -79,12 +86,13 @@ class Form extends React.Component {
                                 <Col md={6}>
                                     <FormGroup controlId="formControlsTextarea">
                                         <ControlLabel>Describe your sighting...</ControlLabel>
-                                        <FormControl componentClass="textarea" value={this.state.description} name="description" onChange={this.handleInputChange}/>
+                                        <FormControl componentClass="textarea" placeholder="Here..." value={this.state.description} name="description" onChange={this.handleInputChange}/>
                                     </FormGroup>
                                 </Col>
                                 <Col md={6}>
                                     <ControlLabel>When dis happend?</ControlLabel>
-                                    <Datetime onChange={this.handleDateChange} value={this.state.dateTime} />
+                                    <Datetime onChange={this.handleDateChange} value={this.state.dateTime} isValidDate={this.valid} />
+                                    <HelpBlock>Sorry time travelers, you can't select future dates.</HelpBlock>
                                 </Col>
                             </Row>
                             <FormGroup>        
@@ -97,7 +105,7 @@ class Form extends React.Component {
                         <Image src={"/images/" + this.state.species.replace(/ /g, "_") + ".jpg"} responsive />
                     </Col>
                 </Row>
-            </div>
+            </Well>
         );
       }
 }

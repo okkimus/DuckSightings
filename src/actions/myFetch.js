@@ -1,5 +1,5 @@
 const fetchFromServer = (toFetch) => {
-    return fetch('http://localhost:8081/' + toFetch)
+    return fetch('https://duck-server.herokuapp.com/' + toFetch)
         .then(results => {
             return results.json();
         })
