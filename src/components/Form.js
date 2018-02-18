@@ -1,6 +1,7 @@
 import React from 'react';
 import {FormGroup, ControlLabel, FormControl, HelpBlock, Col, Row, Button, Image} from 'react-bootstrap';
 import moment from 'moment';
+import FormAlert from './FormAlert';
 
 var Datetime = require('react-datetime');
 
@@ -12,6 +13,7 @@ class Form extends React.Component {
         this.handleDateChange = this.handleDateChange.bind(this);
         this.handleSubmit = this.props.handleSubmit.bind(this);
         this.fetchSightings = this.props.fetchSightings;
+        this.validateState = this.props.validateState.bind(this);
 
         this.state = {
             species: 'select',
@@ -19,14 +21,6 @@ class Form extends React.Component {
             dateTime: moment(),
             count: 1
         };
-    }
-
-    getValidationState() {
-        const length = this.state.value.length;
-        if (length > 10) return 'success';
-        else if (length > 5) return 'warning';
-        else if (length > 0) return 'error';
-        return null;
     }
     
     handleInputChange(event) {
@@ -44,55 +38,64 @@ class Form extends React.Component {
             dateTime: e._d
         });
     }
+    
+    handleShow() {
+        console.log(this.state);
+        this.setState({ show: true });
+    }
 
     render() {
         return (
-            <Row>
-                <Col md={6}>
-                    <form onSubmit={this.handleSubmit}>
-                        <Row>
-                            <FormGroup>
-                                <Col md={9}>
-                                    <ControlLabel>What duck did you see?</ControlLabel>
-                                    <FormControl componentClass="select" placeholder="Select a duck" name="species" onChange={this.handleInputChange}>
-                                        <option value="select">Select...</option>
-                                        { this.props.species.map(s => {
-                                            return(
-                                                <option value={s.name}>{s.name}</option>
-                                            )
-                                        })}
-                                    </FormControl>
-                                </Col>
-                                <Col md={3}>
-                                    <ControlLabel>How many?</ControlLabel>
-                                    <FormControl type="number" value={this.state.count} onChange={this.handleInputChange} name="count">
-                                    </FormControl>
-                                </Col>
-                            </FormGroup>
-                        </Row>
-                        <Row>
-                            <Col md={6}>
-                                <FormGroup controlId="formControlsTextarea">
-                                    <ControlLabel>Describe your sighting...</ControlLabel>
-                                    <FormControl componentClass="textarea" value={this.state.description} name="description" onChange={this.handleInputChange}/>
+            <div>
+                <Row>
+                    <FormAlert handleDismiss={this.handleDismiss} handleShow={this.handleShow} />
+                </Row>
+                <Row>
+                    <Col md={6}>
+                        <form onSubmit={this.handleSubmit}>
+                            <Row>
+                                <FormGroup>
+                                    <Col md={9}>
+                                        <ControlLabel>What duck did you see?</ControlLabel>
+                                        <FormControl componentClass="select" placeholder="Select a duck" name="species" onChange={this.handleInputChange}>
+                                            <option value="select">Select...</option>
+                                            { this.props.species.map(s => {
+                                                return(
+                                                    <option value={s}>{s}</option>
+                                                )
+                                            })}
+                                        </FormControl>
+                                    </Col>
+                                    <Col md={3}>
+                                        <ControlLabel>How many?</ControlLabel>
+                                        <FormControl type="number" value={this.state.count} onChange={this.handleInputChange} name="count">
+                                        </FormControl>
+                                    </Col>
                                 </FormGroup>
-                            </Col>
-                            <Col md={6}>
-                                <ControlLabel>When dis happend?</ControlLabel>
-                                <Datetime onChange={this.handleDateChange} value={this.state.dateTime} />
-                            </Col>
-                        </Row>
-                        <FormGroup>
-                            <Col sm={10}>        
+                            </Row>
+                            <Row>
+                                <Col md={6}>
+                                    <FormGroup controlId="formControlsTextarea">
+                                        <ControlLabel>Describe your sighting...</ControlLabel>
+                                        <FormControl componentClass="textarea" value={this.state.description} name="description" onChange={this.handleInputChange}/>
+                                    </FormGroup>
+                                </Col>
+                                <Col md={6}>
+                                    <ControlLabel>When dis happend?</ControlLabel>
+                                    <Datetime onChange={this.handleDateChange} value={this.state.dateTime} />
+                                </Col>
+                            </Row>
+                            <FormGroup>        
                                 <input type="submit" value="Submit" /> 
-                            </Col>
-                        </FormGroup>
-                    </form>
-                </Col>
-                <Col md={6}>
-                    <Image src={"/images/" + this.state.species.replace(/ /g, "_") + ".jpg"} responsive />
-                </Col>
-            </Row>
+                                <HelpBlock>Note that every field is required!</HelpBlock>
+                            </FormGroup>
+                        </form>
+                    </Col>
+                    <Col md={6}>
+                        <Image src={"/images/" + this.state.species.replace(/ /g, "_") + ".jpg"} responsive />
+                    </Col>
+                </Row>
+            </div>
         );
       }
 }

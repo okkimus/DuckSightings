@@ -2,7 +2,7 @@ import React from 'react';
 import Card from './Card';
 import Form from './Form';
 import fe from './../actions/myFetch.js';
-import {Grid, Row, PageHeader} from 'react-bootstrap';
+import {Grid, Row, PageHeader, ToggleButton, ToggleButtonGroup} from 'react-bootstrap';
 import moment from 'moment';
 
 class App extends React.Component {
@@ -10,6 +10,7 @@ class App extends React.Component {
         super(props);
 
         this.fetchSightings = this.fetchSightings.bind(this);
+        this.handleOrder = this.handleOrder.bind(this);
 
         this.state = {
             species: null,
@@ -20,6 +21,14 @@ class App extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
+
+        const stateValidation = this.validateState();
+
+        if (!this.validateState()) {
+            console.log("handle show");
+            return this.handleShow();
+        }
+
         fetch('http://localhost:8081/sightings', {
             headers: {
                 'content-type': 'application/json'
@@ -39,9 +48,25 @@ class App extends React.Component {
             });
     }
 
+    validateState() {
+        const s = this.state;
+        return (
+            this.props.species.includes(s.species) &&
+            s.description &&
+            s.count > 0 &&
+            s.dateTime < new Date()
+        );
+    }
+
     fetchSightings() {
         fe('sightings').then(result => {
             this.setState({sightings: result});
+        });
+    }
+
+    handleOrder(e) {
+        this.setState({
+            order: e
         });
     }
 
@@ -51,16 +76,25 @@ class App extends React.Component {
 
         if (this.state.species) {
             const species = this.state.species;
-            form = <Form species={species} handleSubmit={this.handleSubmit} fetchSightings={this.fetchSightings} />;
+            form = <Form species={species} handleSubmit={this.handleSubmit} fetchSightings={this.fetchSightings} validateState={this.validateState} />;
          } else {
             fe('species').then(result => {
-                this.setState({species: result});
+                let species = [];
+                result.map((r) => {
+                    species.push(r.name);
+                });
+                this.setState({species: species});
             });
         }
 
         if (this.state.sightings) {
             const sig = this.state.sightings.sort((a,b) => {
-                return b.dateTime < a.dateTime;
+                if (this.state.order === 'DESC') {
+                    return b.dateTime < a.dateTime;
+                } else if (this.state.order === 'ASC') {
+                    return b.dateTime > a.dateTime;
+                }
+
             });
             sightings = sig.map(s => {
                 return(
@@ -80,6 +114,14 @@ class App extends React.Component {
             <Grid>
                 <Row>
                     <PageHeader>Duck Sightings <small>They're coming back!</small></PageHeader>
+                    <ToggleButtonGroup
+                        type="radio"
+                        value={this.state.order}
+                        onChange={this.handleOrder}
+                        name={'order'}>
+                        <ToggleButton value={'DESC'}>Descending</ToggleButton>
+                        <ToggleButton value={'ASC'}>Ascending</ToggleButton>
+                    </ToggleButtonGroup>
                 </Row>
                 <Row>
                     {sightings}
